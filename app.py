@@ -6,7 +6,7 @@ Handles user preference settings (language, email notification, theme, font size
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 from dotenv import load_dotenv
 
@@ -42,8 +42,8 @@ class UserPreference(db.Model):
     email_notification = db.Column(db.Boolean, default=True, nullable=False)
     theme = db.Column(db.String(50), default='winter', nullable=False)
     font_size = db.Column(db.String(20), default='medium', nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     
     def to_dict(self):
         """Convert model to dictionary"""
@@ -103,7 +103,7 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'service': 'user-preferences-service',
-        'timestamp': datetime.utcnow().isoformat()
+        'timestamp': datetime.now(timezone.utc).isoformat()
     }), 200
 
 
@@ -176,7 +176,7 @@ def save_preferences(user_id):
             if 'font_size' in data:
                 preference.font_size = data['font_size']
             
-            preference.updated_at = datetime.utcnow()
+            preference.updated_at = datetime.now(timezone.utc)
             message = 'Preferences updated successfully'
         else:
             # Create new preferences
@@ -250,7 +250,7 @@ def reset_preferences(user_id):
             preference.email_notification = DEFAULT_PREFERENCES['email_notification']
             preference.theme = DEFAULT_PREFERENCES['theme']
             preference.font_size = DEFAULT_PREFERENCES['font_size']
-            preference.updated_at = datetime.utcnow()
+            preference.updated_at = datetime.now(timezone.utc)
             
             db.session.commit()
             
