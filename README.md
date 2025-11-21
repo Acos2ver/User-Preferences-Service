@@ -1,6 +1,8 @@
-User Preferences Microservice
+# User Preferences Microservice
+
 A microservice for managing user preference settings including language, email notifications, theme, and font size.
-Features
+
+## Features
 
 - Save/Update user preferences
 - Load user preferences with defaults
@@ -9,36 +11,69 @@ Features
 - Input validation
 - Performance optimized (responds within 500ms)
 
-Setup Instructions
-1. Install Dependencies
-bashpip install -r requirements.txt
-2. Configure Environment Variables
-IMPORTANT: Never commit your .env file to version control!
-Create a .env file in the root directory:
-bashcp .env.example .env
-Then edit .env with your configuration:
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Configure Environment Variables
+
+**IMPORTANT: Never commit your `.env` file to version control!**
+
+Create a `.env` file in the root directory:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` with your configuration:
+
+```
 DATABASE_URL="your_database_url_here"
 PORT=your_port_number
 FLASK_ENV="development_or_production"
 CORS_ORIGINS="your_frontend_urls_here"
-The .env file is already included in .gitignore for security.
-3. Run the Service
-bashpython app.py
-The service will start on http://localhost:5003
-API Endpoints
-Health Check
+```
+
+The `.env` file is already included in `.gitignore` for security.
+
+### 3. Run the Service
+
+```bash
+python app.py
+```
+
+The service will start on `http://localhost:5003`
+
+## API Endpoints
+
+### Health Check
+```
 GET /health
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "status": "healthy",
   "service": "user-preferences-service",
   "timestamp": "2025-01-01T12:00:00"
 }
+```
 
-Get User Preferences
+---
+
+### Get User Preferences
+```
 GET /preferences/<user_id>
-Response (if preferences exist):
-json{
+```
+
+**Response (if preferences exist):**
+```json
+{
   "success": true,
   "preferences": {
     "id": 1,
@@ -51,8 +86,11 @@ json{
     "updated_at": "2025-01-01T12:00:00"
   }
 }
-Response (if no preferences exist - returns defaults):
-json{
+```
+
+**Response (if no preferences exist - returns defaults):**
+```json
+{
   "success": true,
   "preferences": {
     "user_id": 123,
@@ -63,19 +101,29 @@ json{
   },
   "message": "No saved preferences found. Returning defaults."
 }
+```
 
-Save/Update User Preferences
+---
+
+### Save/Update User Preferences
+```
 POST /preferences/<user_id>
 PUT /preferences/<user_id>
-Request Body:
-json{
+```
+
+**Request Body:**
+```json
+{
   "language": "Korean",
   "email_notification": false,
   "theme": "spring-summer",
   "font_size": "large"
 }
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "success": true,
   "message": "Preferences saved successfully",
   "preferences": {
@@ -89,11 +137,18 @@ json{
     "updated_at": "2025-01-01T12:00:00"
   }
 }
+```
 
-Reset Preferences to Defaults
+---
+
+### Reset Preferences to Defaults
+```
 POST /preferences/<user_id>/reset
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "success": true,
   "message": "Preferences reset to defaults",
   "preferences": {
@@ -107,19 +162,33 @@ json{
     "updated_at": "2025-01-01T12:00:00"
   }
 }
+```
 
-Delete User Preferences
+---
+
+### Delete User Preferences
+```
 DELETE /preferences/<user_id>
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "success": true,
   "message": "Preferences deleted successfully. Defaults will be used."
 }
+```
 
-Get Available Options
+---
+
+### Get Available Options
+```
 GET /preferences/options
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "success": true,
   "options": {
     "language": ["English", "Korean"],
@@ -133,52 +202,74 @@ json{
     "font_size": "medium"
   }
 }
-Database Schema
-UserPreference Model
-ColumnTypeDescriptionidIntegerPrimary keyuser_idIntegerUser ID (unique, indexed)languageString(20)Language preference (English/Korean)email_notificationBooleanEmail notification settingthemeString(50)Theme preferencefont_sizeString(20)Font size preferencecreated_atDateTimeCreation timestampupdated_atDateTimeLast update timestamp
-Valid Options
-Language
+```
 
-English
-Korean
+## Database Schema
 
-Theme
+### UserPreference Model
 
-spring-summer
-fall-brown
-winter (default)
+| Column | Type | Description |
+|--------|------|-------------|
+| id | Integer | Primary key |
+| user_id | Integer | User ID (unique, indexed) |
+| language | String(20) | Language preference (English/Korean) |
+| email_notification | Boolean | Email notification setting |
+| theme | String(50) | Theme preference |
+| font_size | String(20) | Font size preference |
+| created_at | DateTime | Creation timestamp |
+| updated_at | DateTime | Last update timestamp |
 
-Font Size
+## Valid Options
 
-small
-medium (default)
-large
+### Language
+- `English`
+- `Korean`
 
-Email Notification
+### Theme
+- `spring-summer`
+- `fall-brown`
+- `winter` (default)
 
-true (default)
-false
+### Font Size
+- `small`
+- `medium` (default)
+- `large`
 
-Performance Requirements
+### Email Notification
+- `true` (default)
+- `false`
+
+## Performance Requirements
+
 The service responds within 500ms for GET requests to maintain a responsive user experience.
-Error Handling
+
+## Error Handling
+
 All endpoints return appropriate HTTP status codes:
 
-200 - Success
-400 - Bad Request (validation errors)
-404 - Not Found
-500 - Internal Server Error
+- `200` - Success
+- `400` - Bad Request (validation errors)
+- `404` - Not Found
+- `500` - Internal Server Error
 
-Error Response Format:
-json{
+**Error Response Format:**
+```json
+{
   "success": false,
   "error": "Error message here"
 }
-Testing with cURL
-Get preferences
-bashcurl http://localhost:5003/preferences/123
-Save preferences
-bashcurl -X POST http://localhost:5003/preferences/123 \
+```
+
+## Testing with cURL
+
+### Get preferences
+```bash
+curl http://localhost:5003/preferences/123
+```
+
+### Save preferences
+```bash
+curl -X POST http://localhost:5003/preferences/123 \
   -H "Content-Type: application/json" \
   -d '{
     "language": "Korean",
@@ -186,13 +277,24 @@ bashcurl -X POST http://localhost:5003/preferences/123 \
     "theme": "spring-summer",
     "font_size": "large"
   }'
-Reset to defaults
-bashcurl -X POST http://localhost:5003/preferences/123/reset
-Delete preferences
-bashcurl -X DELETE http://localhost:5003/preferences/123
-Integration with Frontend
-Update your frontend api.js to include:
-javascriptconst PREFERENCES_API_URL = 
+```
+
+### Reset to defaults
+```bash
+curl -X POST http://localhost:5003/preferences/123/reset
+```
+
+### Delete preferences
+```bash
+curl -X DELETE http://localhost:5003/preferences/123
+```
+
+## Integration with Frontend
+
+Update your frontend `api.js` to include:
+
+```javascript
+const PREFERENCES_API_URL = 
   import.meta.env.VITE_PREFERENCES_API || 'http://localhost:5003'
 
 // Get user preferences
@@ -224,7 +326,12 @@ export async function resetPreferencesApi(userId) {
   if (!res.ok) throw new Error(data.error || 'Failed to reset preferences')
   return data
 }
-License
+```
+
+## License
+
 MIT
-Author
+
+## Author
+
 Olivia Choi - Oregon State University
