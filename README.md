@@ -275,7 +275,7 @@ Python-dotenv - Environment variable management
 
 License
 MIT
-## Authors
+Authors
 
-- **Olivia Choi** - Oregon State University
-- **Tiffany Gorseth** - Collaborator
+Olivia Choi - Oregon State University
+Tiffany Gorseth - Collaborator
