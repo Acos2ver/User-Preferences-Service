@@ -265,8 +265,22 @@ GET /preferences/options
   }
 }
 ```
+### UML Diagram
+<img width="938" height="1098" alt="image" src="https://github.com/user-attachments/assets/81f7ad45-d4da-4163-9073-a4ac9f997e1b" />
 
-## Database Schema
+### Database Schema
+CREATE TABLE user_preferences (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    language VARCHAR(20) NOT NULL DEFAULT 'English',
+    email_notification BOOLEAN NOT NULL DEFAULT 1,
+    theme VARCHAR(50) NOT NULL DEFAULT 'winter',
+    font_size VARCHAR(20) NOT NULL DEFAULT 'medium',
+    created_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    updated_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+);
+CREATE INDEX idx_user_preferences_user_id 
+ON user_preferences (user_id);
 
 ### UserPreference Model
 
